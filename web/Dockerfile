@@ -12,15 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 LABEL maintainer="Netflix Open Source Development <talent@netflix.com>"
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
   apt-get install -y curl git build-essential sudo \
-    python3 python3-pip python3-dev \
-    nodejs npm \
+    python3.7 python3-pip python3-dev \
+    nodejs-dev node-gyp nodejs npm \
     postgresql postgresql-contrib \
-    libpq-dev libssl-dev libffi-dev libsasl2-dev libldap2-dev && \
+    libpq-dev libssl1.0-dev libffi-dev libsasl2-dev libldap2-dev && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
   update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 && \
   update-alternatives --install /usr/bin/node node /usr/bin/nodejs 1 && \
