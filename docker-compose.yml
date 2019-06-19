@@ -11,7 +11,7 @@ services:
     networks:
       - lemur
     ports:
-      - "8000:8000"
+      - "8000"
     volumes:
       - lemur-web:/usr/local/src/lemur/lemur/static/dist
     environment:
@@ -28,8 +28,8 @@ services:
     networks:
       - lemur
     ports:
-      - "80:80"
-      - "443:443"
+      - "80"
+      - "443"
     volumes:
       - lemur-web:/usr/local/src/lemur/lemur/static/dist
 
@@ -44,7 +44,7 @@ services:
     networks:
       - lemur
     ports:
-      - "5432:5432"
+      - "5432"
     volumes:
       - lemur-postgres:/var/lib/postgresql/data
 
