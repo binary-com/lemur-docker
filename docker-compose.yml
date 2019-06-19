@@ -17,6 +17,13 @@ services:
     environment:
       DEBUG: 'False'
       LEMUR_CONF: /usr/local/src/lemur/lemur.conf.py
+      LEMUR_TARGET:
+      LEMUR_FLASK_SECRET_KEY:
+      LEMUR_TOKEN_SECRET:
+      LEMUR_ENCRYPTION_KEYS:
+      LEMUR_EMAIL:
+      LEMUR_SECURITY_TEAM_EMAIL:
+      LEMUR_LOG_LEVEL:
   lemur-nginx:
     image: regentmarkets/lemur-nginx
     deploy:
