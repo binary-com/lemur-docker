@@ -1,29 +1,72 @@
-lemur-web:
-  restart: always
-  build: ./web
-  expose:
-    - "8000"
-  links:
-    - postgres:postgres
-  volumes:
-    - /usr/local/src/lemur/lemur/static/dist
-  environment:
-    DEBUG: 'False'
-    LEMUR_CONF: /usr/local/src/lemur/lemur.conf.py
-lemur-nginx:
-  restart: always
-  build: ./nginx/
-  ports:
-    - "80:80"
-    - "443:443"
-  volumes_from:
-    - lemur-web
-  links:
-    - lemur-web
-    - lemur-web:web
+version: "3"
+services:
+  web:
+    image: regentmarkets/lemur-web 
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - lemur
+    ports:
+      - "8000"
+    volumes:
+      - lemur-web:/usr/local/src/lemur/lemur/static/dist
+    environment:
+      DEBUG: 'False'
+      LEMUR_CONF: /usr/local/src/lemur/lemur.conf.py
+      LEMUR_TARGET:
+      LEMUR_FLASK_SECRET_KEY:
+      LEMUR_TOKEN_SECRET:
+      LEMUR_ENCRYPTION_KEYS:
+      LEMUR_EMAIL:
+      LEMUR_SECURITY_TEAM_EMAIL:
+      LEMUR_LOG_LEVEL:
+  lemur-nginx:
+    image: regentmarkets/lemur-nginx
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - lemur
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - lemur-web:/usr/local/src/lemur/lemur/static/dist
 
-postgres:
-  restart: always
-  image: postgres:latest
-  ports:
-    - "5432:5432"
+  postgres:
+    image: postgres:latest
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - lemur
+    ports:
+      - "5432"
+    volumes:
+      - lemur-postgres:/var/lib/postgresql/data
+
+volumes:
+  lemur-web:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /data/lemur-web
+  lemur-postgres:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /data/lemur-postgres
+networks:
+  lemur:

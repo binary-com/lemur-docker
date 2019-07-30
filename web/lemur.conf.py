@@ -14,36 +14,40 @@ THREADS_PER_PAGE = 8
 CORS = False
 debug = False
 
-# this is the secret key used by flask session management
-SECRET_KEY = 'hvDtIoyjAHT/iiuOxmYbA1SGBZMa5+9sgllk08GVvXoSbQ0kJ9arlA=='
+try:
+    # this is the secret key used by flask session management
+    SECRET_KEY = os.environ['LEMUR_FLASK_SECRET_KEY']
 
-# You should consider storing these separately from your config
-LEMUR_TOKEN_SECRET = 'p1foIa7n5+nB1GnEpR4Wf2B2UgzUiBT1BHtB5WnTNoJSMVKhdXu1FA=='
-LEMUR_ENCRYPTION_KEYS = ['yWdKiDFE_TAvoTx-E-Cn1sbbktAbmGwjbZGNBXshys4=']
+    # You should consider storing these separately from your config
+    LEMUR_TOKEN_SECRET = os.environ['LEMUR_TOKEN_SECRET']
+    LEMUR_ENCRYPTION_KEYS = os.environ['LEMUR_ENCRYPTION_KEYS'].split(',')
+
+    # Mail Server
+
+    LEMUR_EMAIL = os.environ['LEMUR_EMAIL']
+    LEMUR_SECURITY_TEAM_EMAIL = os.environ['LEMUR_SECURITY_TEAM_EMAIL'].split(',')
+    LEMUR_DEFAULT_EXPIRATION_NOTIFICATION_INTERVALS = [30, 15, 2]
+
+    # Certificate Defaults
+    LEMUR_DEFAULT_COUNTRY = 'US'
+    LEMUR_DEFAULT_STATE = 'California'
+    LEMUR_DEFAULT_LOCATION = 'Los Gatos'
+    LEMUR_DEFAULT_ORGANIZATION = 'Example, Inc.'
+    LEMUR_DEFAULT_ORGANIZATIONAL_UNIT = 'Example'
+
+    # Logging
+
+    LOG_LEVEL = os.environ['LEMUR_LOG_LEVEL']
+    LOG_FILE = "lemur.log"
+except KeyError as key_name:
+    print("Please set the environment variable {0}".format(key_name))
+    exit(1)
 
 # this is a list of domains as regexes that only admins can issue
 LEMUR_RESTRICTED_DOMAINS = []
 
 ACTIVE_PROVIDERS = []
 METRIC_PROVIDERS = []
-
-# Mail Server
-
-LEMUR_EMAIL = 'lemur@example.com'
-LEMUR_SECURITY_TEAM_EMAIL = ['security@example.com']
-LEMUR_DEFAULT_EXPIRATION_NOTIFICATION_INTERVALS = [30, 15, 2]
-
-# Certificate Defaults
-LEMUR_DEFAULT_COUNTRY = 'US'
-LEMUR_DEFAULT_STATE = 'California'
-LEMUR_DEFAULT_LOCATION = 'Los Gatos'
-LEMUR_DEFAULT_ORGANIZATION = 'Example, Inc.'
-LEMUR_DEFAULT_ORGANIZATIONAL_UNIT = 'Example'
-
-# Logging
-
-LOG_LEVEL = "DEBUG"
-LOG_FILE = "lemur.log"
 
 
 # Database
